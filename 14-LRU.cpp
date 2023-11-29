@@ -1,51 +1,47 @@
-#include <iostream>
-#include <vector>
-#include <unordered_map>
-#include <list>
+#include<bits/stdc++.h>
 
 using namespace std;
 
-int lruPageFaults(const vector<int> &referenceString, int numFrames);
+// Function to implement Least Recently Used (LRU) page replacement algorithm
+int lru(vector<int> referenceString, int frames) {
+    int faults = 0; // Variable to count page faults
+    unordered_set<int> pageSet; // Set to store unique pages in memory
+    list<int> lruList; // List to maintain the order of pages based on recent use
+    int n = referenceString.size(); // Size of the reference string
 
-int main() {
-    // Static values
-    int numFrames = 3; // Set your desired number of frames
-    vector<int> referenceString = {1, 2, 3, 4, 1, 2, 5, 1, 2, 3, 4, 5}; // Set your desired reference string
-
-    int pageFaults = lruPageFaults(referenceString, numFrames);
-
-    cout << "Number of page faults using LRU: " << pageFaults << endl;
-
-    return 0;
-}
-
-int lruPageFaults(const vector<int> &referenceString, int numFrames) {
-    int pageFaults = 0;
-    unordered_map<int, list<int>::iterator> pageMap;
-    list<int> lruList;
-
-    for (int i = 0; i < referenceString.size(); i++) {
+    // Iterate through the reference string
+    for(int i=0; i<n; i++) {
         int page = referenceString[i];
 
-        if (pageMap.find(page) == pageMap.end()) {
-            // Page fault
-            pageFaults++;
+        // Check if the page is not in the page set (page fault)
+        if(pageSet.find(page) == pageSet.end()) {
+            faults++; // Increment page fault count
 
-            if (lruList.size() == numFrames) {
-                int lruPage = lruList.back();
-                lruList.pop_back();
-                pageMap.erase(lruPage);
+            // Check if the list is already at its maximum capacity (frames)
+            if(lruList.size() == frames) {
+                int lruPage = lruList.back(); // Get the least recently used page
+                lruList.pop_back(); // Remove the least recently used page from the list
+                pageSet.erase(lruPage); // Remove the least recently used page from the set
             }
 
-            lruList.push_front(page);
-            pageMap[page] = lruList.begin();
+            lruList.push_front(page); // Add the current page to the front of the list (most recently used)
+            pageSet.insert(page); // Add the current page to the set
         } else {
-            // Page hit
-            lruList.erase(pageMap[page]);
+            // If the page is already in memory, update its position in the list (move to the front)
+            lruList.remove(page);
             lruList.push_front(page);
-            pageMap[page] = lruList.begin();
         }
     }
 
-    return pageFaults;
+    return faults; // Return the total number of page faults
+}
+
+// Main function
+int main() {
+    int frames = 3; // Number of frames in the memory
+    vector<int> referenceString = {7, 0, 1, 2, 0, 3, 0, 4, 2, 3, 0, 3, 1, 2, 0}; // Reference string
+    int pageFaults = lru(referenceString, frames); // Call the LRU function
+    cout << "Page Faults using LRU: " << pageFaults << endl; // Display the total number of page faults
+
+    return 0; // Return 0 to indicate successful program execution
 }
