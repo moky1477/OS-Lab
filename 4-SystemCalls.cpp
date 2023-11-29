@@ -1,28 +1,20 @@
-#include <iostream>
-#include <unistd.h>
-#include <sys/types.h>
+#include<bits/stdc++.h>
+#include<sys/types.h>
+#include<unistd.h>
 
 using namespace std;
 
-int main() {
-    // Write
+int main(){
     int n;
-    cout << "Write System Call:"<<endl;
+    cout<<"Write System Call:"<<endl;
     n = write(1, "Hello", 5);
-    cout << "\n";
-    write(1, "Hello", 2); // prints only 2 characters
-    cout << "\n";
+    cout<<endl;
+    write(1, "Hello", 3);
+    cout<<endl;
 
-    // write(1, "Hello", 20); // Causes buffer overflow, commented out
-    cout << "\n";
-    cout << "Value of n is " << n << endl;
-
-    cout << "\n";
-    cout << "Read System Call:"<<endl;
-    // Read
-    // We cannot read directly; first, we have to store it in some memory (buffer)
+    cout<<"Read System call"<<endl;
     int m;
-    char b[30]; // memory (buffer) max storage: 30
+    char b[30];
     m = read(0, b, 30);
     write(1, b, m);
 

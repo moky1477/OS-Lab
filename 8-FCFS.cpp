@@ -1,42 +1,34 @@
-#include <iostream>
-#include <vector>
+#include<bits/stdc++.h>
+#include<unistd.h>
+#include<sys/types.h>
 
 using namespace std;
 
-// FCFS function definition
-void fcfs(const vector<int> &arrival_time, const vector<int> &burst_time, vector<int> &finish_time, vector<int> &turnaround_time, vector<int> &waiting_time) {
-    int n = arrival_time.size();
-    finish_time[0] = arrival_time[0] + burst_time[0];
-    turnaround_time[0] = finish_time[0] - arrival_time[0];
-    waiting_time[0] = 0;
+void fcfs(vector<int> &arrival,vector<int> &burst,vector<int> &turn_around,vector<int> &finish,vector<int> &waiting){
+    int n = arrival.size();
+    finish[0] = arrival[0] + burst[0];
+    turn_around[0] = finish[0] - arrival[0];
+    waiting[0] = 0;
 
-    for (int i = 1; i < n; i++) {
-        finish_time[i] = max(finish_time[i - 1], arrival_time[i]) + burst_time[i];
-        turnaround_time[i] = finish_time[i] - arrival_time[i];
-        waiting_time[i] = turnaround_time[i] - burst_time[i];
+    for(int i=1; i<n; i++){
+        finish[i] = max(finish[i-1], arrival[i])+burst[i];
+        turn_around[i] = finish[i] - arrival[i];
+        waiting[i] = turn_around[i]-burst[i];
     }
 }
 
-int main() {
-    // Set the number of processes
-    int n = 4; // You can change this value as needed
+int main(){
+    int n = 4;
+    vector<int> arrival = {0, 1, 2, 4};
+    vector<int> burst = {4, 3, 6, 2};
+    vector<int> finish(n, 0);
+    vector<int> turn_around(n, 0);
+    vector<int> waiting(n, 0);
 
-    // Static input for arrival time and burst time for each process
-    vector<int> arrival_time = {0, 2, 4, 7};
-    vector<int> burst_time = {4, 3, 6, 2};
-    vector<int> finish_time(n, 0);
-    vector<int> turnaround_time(n, 0);
-    vector<int> waiting_time(n, 0);
-
-    // Calculate finish time, turnaround time, and waiting time using FCFS
-    fcfs(arrival_time, burst_time, finish_time, turnaround_time, waiting_time);
-
-    // Display results
+    fcfs(arrival, burst, turn_around, finish, waiting);
     cout << "\nProcess\tArrival Time\tBurst Time\tFinish Time\tTurnaround Time\tWaiting Time\n";
-    for (int i = 0; i < n; i++) {
-        cout << i + 1 << "\t" << arrival_time[i] << "\t\t" << burst_time[i] << "\t\t" << finish_time[i] << "\t\t"
-             << turnaround_time[i] << "\t\t" << waiting_time[i] << endl;
+    for(int i=0; i<n; i++){
+        cout<<i+1<<"\t"<<arrival[i]<<"\t\t"<<burst[i]<<"\t\t"<<waiting[i]<<"\t\t"<<finish[i]<<"\t\t"<<turn_around[i]<<endl;
     }
-
     return 0;
 }
